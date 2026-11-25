@@ -49,8 +49,23 @@ public class Incidente implements Comparable<Incidente> {
 
     @Override
     public int compareTo(Incidente otro) {
-        // TODO C: definir y utilizar aquí un Comparator<Incidente> compuesto.
-        throw new UnsupportedOperationException("C: compareTo pendiente");
+        Comparator<Incidente> comparador = Comparator
+                .comparingInt(Incidente::getSeveridad)
+                .thenComparing(Incidente::getMinutosRestantes)
+                //CANTIDAD DE SERVICIOS servicios.size()
+                .thenComparingInt((Incidente i) -> i.getServicios().size()).reverse()
+                .thenComparing((Incidente i) -> {
+                    int sumatoriaUserA = 0;
+                    for (ServicioAfectado servicio : i.getServicios()) {
+                        sumatoriaUserA += servicio.usuariosAfectados();
+                    }
+                    return sumatoriaUserA;
+                }
+                .thenComparing(Incidente::getRegistradoEn)
+                .thenComparing(Incidente ::getCodigo; String.compareToIgnoreCase);
+
+        return comparador.compare(this, otro);
+        
     }
 
     @Override
