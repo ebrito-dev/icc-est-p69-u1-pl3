@@ -1,17 +1,19 @@
 package controllers;
 
 import java.util.List;
+import java.util.Objects;
+
 import models.Incidente;
 
 public class IncidenteController {
     public List<Incidente> sort(List<Incidente> incidentes) {
-        return incidentes.sort(null);
+        incidentes.sort(null);
         return incidentes;
-
     }
 
     public int busquedaBinaria(List<Incidente> incidentes, Incidente objetivo) {
-        // TODO B: implementar búsqueda binaria utilizando compareTo.
+        Objects.requireNonNull(incidentes, "La lista no puede ser nula");
+        Objects.requireNonNull(objetivo, "El objetivo no puede ser nulo");
         int low = 0;
         int high = incidentes.size() - 1;
         while (low <= high) {

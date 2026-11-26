@@ -47,27 +47,34 @@ public class Incidente implements Comparable<Incidente> {
         return registradoEn;
     }
 
-    @Override
+@Override
     public int compareTo(Incidente otro) {
+        Objects.requireNonNull(otro, "No se puede comparar con null");
         Comparator<Incidente> comparador = Comparator
                 .comparingInt(Incidente::getSeveridad)
-                .thenComparing(Incidente::getMinutosRestantes)
-                //CANTIDAD DE SERVICIOS servicios.size()
-                .thenComparingInt((Incidente i) -> i.getServicios().size()).reverse()
-                .thenComparing((Incidente i) -> {
-                    int sumatoriaUserA = 0;
-                    for (ServicioAfectado servicio : i.getServicios()) {
-                        sumatoriaUserA += servicio.usuariosAfectados();
-                    }
-                    return sumatoriaUserA;
-                }
+                .thenComparingInt(Incidente::getMinutosRestantes)
+                .thenComparing(
+                        (Incidente i) -> i.getServicios() == null ? 0 : i.getServicios().size(),
+                        Comparator.reverseOrder()
+                )
+                .thenComparing(
+                        (Incidente i) -> {
+                            if (i.getServicios() == null) return 0L;
+                            long sumatoriaUserA = 0L;
+                            for (ServicioAfectado servicio : i.getServicios()) {
+                                if (servicio != null) {
+                                    sumatoriaUserA += servicio.usuariosAfectados();
+                                }
+                            }
+                            return sumatoriaUserA;
+                        },
+                        Comparator.reverseOrder()
+                )
                 .thenComparing(Incidente::getRegistradoEn)
-                .thenComparing(Incidente ::getCodigo; String.compareToIgnoreCase);
+                .thenComparing(Incidente::getCodigo, String.CASE_INSENSITIVE_ORDER);
 
         return comparador.compare(this, otro);
-        
     }
-
     @Override
     public String toString() {
         return "%s | severidad=%d | minutos=%d | servicios=%d | fecha=%s"
